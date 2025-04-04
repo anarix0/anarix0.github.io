@@ -6,12 +6,17 @@ window.ondataload = () => { }
             }   else if (landyard['discord_status'] == "online") {status = "online";
             }   else if (landyard['discord_status'] == "idle") {status = "idle";
             }   else {status = "error."}
-
-            if (landyard.activities[0]) {
-                if (landyard.activities[0].id == "custom") {
-                        status += " &mdash; "+landyard.activities[0].state
-                }    
-            }
+			
+			for (i in landyard.activities) {
+				console.log(landyard.activities[i])
+				if (landyard.activities[i].id != "spotify:1") {
+					if (landyard.activities[i].id != "custom") {
+                        status += " &mdash; "+landyard.activities[i].name
+					} else {
+						status += " &mdash; "+landyard.activities[i].state
+					}
+                }
+			}
 
             document.getElementsByClassName("statusText")[0].innerHTML = status
             
