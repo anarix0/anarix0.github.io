@@ -1,51 +1,68 @@
-window.ondataload = () => { }
-        fetch("https://api.lanyard.rest/v1/users/681177693831823363").then((a) => a.json().then((a) => {
-            landyard = a.data
-            if (landyard['discord_status'] == "dnd") {status = "dnd";
-            }   else if (landyard['discord_status'] == "offline") {status = "offline";
-            }   else if (landyard['discord_status'] == "online") {status = "online";
-            }   else if (landyard['discord_status'] == "idle") {status = "idle";
-            }   else {status = "error."}
-			
-			for (i in landyard.activities) {
-				console.log(landyard.activities[i])
-				if (landyard.activities[i].id != "spotify:1") {
-					if (landyard.activities[i].id != "custom") {
-                        status += " &mdash; "+landyard.activities[i].name
-					} else {
-						status += " &mdash; "+landyard.activities[i].state
-					}
-                }
-			}
+const lanyard_url = "https://api.lanyard.rest/v1/users/681177693831823363"
 
-            document.getElementsByClassName("statusText")[0].innerHTML = status
-            
+window.onload = () => {
+    updateStatus()
+    currentlyPlaying()
+}
 
-            spotify = landyard['spotify']
-            if (landyard['listening_to_spotify'] == true || landyard['listening_to_spotify'] == "true") {
-                document.getElementsByClassName("statusText")[0].innerHTML = "<button class='spotifybtn' onclick='currentlyPlaying()'><i class='bx bx-fw bxl-spotify'></i></button> " + status
-                //music = "listening to </i>    <i class='bx bxl-spotify'></i> <i>"+landyard.spotify['song']+" — "+landyard.spotify['artist'].replaceAll(";", ",")
+function updateStatus() {
+    fetch(lanyard_url).then((a) => a.json().then((a) => {
+        let status;
+
+        const landyard = a.data;
+        const current_status = landyard['discord_status']
+
+        const valid_statuses = ['dnd', 'idle', 'offline', 'online']
+        status = valid_statuses.includes(current_status) ? current_status : "error."
+		
+		for (i in landyard.activities) {
+			if (landyard.activities[i].id != "spotify:1") {
+				if (landyard.activities[i].id != "custom") {
+                    status += " &mdash; "+landyard.activities[i].name
+				} else {
+					status += " &mdash; <i>"+landyard.activities[i].state+"</i>"
+				}
             }
-                        
-        }))
+		}
+
+        const statusText = document.getElementsByClassName("statusText")[0]
+
+        spotify = landyard['spotify']
+        if (landyard['listening_to_spotify'] == true) {
+
+            const spotifyBtn = document.createElement("button")
+            spotifyBtn.classList.add("spotifybtn")
+            spotifyBtn.setAttribute('onclick', 'currentlyPlaying()')
+
+            spotifyBtn.innerHTML = "<i class='bx bx-fw bxl-spotify'></i>"
+            
+            statusText.innerHTML = ''
+
+            statusText.appendChild(spotifyBtn)
+
+            statusText.innerHTML = statusText.innerHTML + status
+        } else {
+            statusText.innerHTML = status
+        }                    
+    }))
+}
 
 function currentlyPlaying() {
-    fetch("https://api.lanyard.rest/v1/users/681177693831823363").then((a) => a.json().then((a) => {
-            landyard = a.data
-            
-            spotify = landyard['spotify']
-            music = "</i><i>"+landyard.spotify['song']+" — "+landyard.spotify['artist'].replaceAll(";", ",")
+    fetch(lanyard_url).then((a) => a.json().then((a) => {
+            spotify = a.data['spotify']
+
+            music = "</i><i>"+spotify['song']+" — "+spotify['artist'].replaceAll(";", ",")
+
             document.getElementsByClassName("statusTextspot")[0].classList.add("spotifyanim")
             document.getElementsByClassName("statusTextspot")[0].innerHTML = music
+    
             setTimeout(function() {
                 document.getElementsByClassName("statusTextspot")[0].classList.remove("spotifyanim")
-                document.getElementsByClassName("statusTextspot")[0].innerHTML = ""
+                // document.getElementsByClassName("statusTextspot")[0].innerHTML = ""
             }, 5500)
             }
-                        
         ))
     }
-
 
 function hideAll() {
     document.getElementsByTagName("img")[0].classList.add("fadeoutimg")
