@@ -1,10 +1,5 @@
 const lanyard_url = "https://api.lanyard.rest/v1/users/681177693831823363"
 
-window.onload = () => {
-    updateStatus()
-    currentlyPlaying()
-}
-
 function updateStatus() {
     fetch(lanyard_url).then((a) => a.json().then((a) => {
         let status;
@@ -58,11 +53,15 @@ function currentlyPlaying() {
     
             setTimeout(function() {
                 document.getElementsByClassName("statusTextspot")[0].classList.remove("spotifyanim")
-                // document.getElementsByClassName("statusTextspot")[0].innerHTML = ""
+                document.getElementsByClassName("statusTextspot")[0].innerHTML = ""
             }, 5500)
             }
         ))
-    }
+}
+window.onload = () => {
+    currentlyPlaying()
+    updateStatus()
+}
 
 function hideAll() {
     document.getElementsByTagName("img")[0].classList.add("fadeoutimg")
