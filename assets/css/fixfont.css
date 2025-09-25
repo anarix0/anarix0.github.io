@@ -1,0 +1,20 @@
+/* sourced from https://fonts.google.com */
+
+/* latin */
+@font-face {
+  font-family: 'DM Sans';
+  font-style: italic;
+  font-weight: 100 1000;
+  font-display: swap;
+  src: url('/assets/font/DMSans-Italic.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F, U+2212, U+FFFD;
+}
+/* latin */
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 100 1000;
+  font-display: swap;
+  src: url('/assets/font/DMSans-Regular.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F, U+2212, U+FFFD;
+}
