@@ -6,8 +6,10 @@
 
     <link rel="stylesheet" href="/assets/boxicons-2.1.4/css/boxicons.min.css">
 
-    <link rel="preload" href="/assets/font/DMSans-Italic.woff2">
-    <link rel="preload" href="/assets/font/DMSans-Regular.woff2">
+    <link rel="preload" href="/assets/font/DMSans-Italic.woff2" as="font">
+    <link rel="preload" href="/assets/font/DMSans-Regular.woff2" as="font">
+
+    <link rel="preconnect" href="/assets/boxicons-2.1.4/fonts/boxicons.woff2">
 
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/fixfont.css">
@@ -32,7 +34,7 @@
 </head>
 <body>
     <div class="titlecont">
-        <img src="/assets/img/icon.png" width=125 height=125 alt="anarix0's profile picture, a cat wearing a motorcycle helmet">
+        <img src="/assets/img/icon.png" width=125 height=125 alt="anarix0's profile picture, a cat wearing a motorcycle helmet" fetchpriority=high>
         <h2>anarix0</h2>
         <h3 class="statusText">please enable javascript</h3>
         <h3 class="statusTextspot"><br></h3>    
