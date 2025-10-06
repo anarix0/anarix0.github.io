@@ -70,6 +70,7 @@ function WSupdateStatus(landyard) {
         spotifyBtn.classList.add("spotifybtn")
         spotifyBtn.setAttribute('onclick', 'currentlyPlaying()')
         spotifyBtn.innerHTML = "<i class='bx bx-fw bxl-spotify'></i>"
+        spotifyBtn.ariaLabel = "Spotify Button"
 
         usualStatus = "<button class=\"spotifybtn\" onclick=\"currentlyPlaying()\"><i class=\"bx bx-fw bxl-spotify\"></i></button>" + status.replace("&mdash;", "—")
 
@@ -107,7 +108,7 @@ function WSupdateStatus(landyard) {
         currentTimeout = 0
 
         if ((statusText.innerHTML != usualStatus) && firstRun) {
-            console.log("DIFF STATUS")
+            // console.log("DIFF STATUS")
             statusText.classList.remove('show')
             statusText.classList.add('hide')
             setTimeout(() => {

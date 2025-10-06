@@ -20,6 +20,7 @@
 
     <meta content="2faa.cc" property="og:title" />
     <meta content="I enjoy making stuff that do something. I easily create surprisingly bad code, somehow." property="og:description" />
+    <meta content="I enjoy making stuff that do something. I easily create surprisingly bad code, somehow." property="description" />
     <meta content="https://2faa.cc/" property="og:url" />
     <meta content="https://2faa.cc/assets/img/icon.png" property="og:image" />
     <meta content="#2579f0" data-react-helmet="true" name="theme-color" />
@@ -34,7 +35,14 @@
 </head>
 <body>
     <div class="titlecont">
-        <img src="/assets/img/icon.png" width=125 height=125 alt="anarix0's profile picture, a cat wearing a motorcycle helmet" fetchpriority=high>
+
+        <picture>
+          <source srcset="/assets/img/icon.avif" type="image/avif" fetchpriority=high>
+          <img src="/assets/img/icon.png" width=125 height=125 alt="anarix0's profile picture, a cat wearing a motorcycle helmet" fetchpriority=high>
+        </picture>
+
+
+        <!-- <img src="/assets/img/icon.png"> -->
         <h2>anarix0</h2>
         <h3 class="statusText">please enable javascript</h3>
         <h3 class="statusTextspot"><br></h3>    
