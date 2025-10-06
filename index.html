@@ -4,34 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- boxicons -->
     <link rel="stylesheet" href="/assets/boxicons-2.1.4/css/boxicons.min.css">
 
+    <!-- font preloads -->
     <link rel="preload" href="/assets/font/DMSans-Italic.woff2" as="font">
     <link rel="preload" href="/assets/font/DMSans-Regular.woff2" as="font">
 
-    <link rel="preconnect" href="/assets/boxicons-2.1.4/fonts/boxicons.woff2">
+    <!-- style preloads -->
+    <link rel="preload" href="/assets/css/style.css" as="stylesheet">
+    <link rel="preload" href="/assets/css/fixfont.css" as="stylesheet">
 
+
+    <!-- preconnect stuff -->
+    <link rel="preconnect" href="/assets/boxicons-2.1.4/fonts/boxicons.woff2">
+    <link rel="preconnect" href="/assets/font/DMSans-Italic.woff2">
+    <link rel="preconnect" href="/assets/font/DMSans-Regular.woff2">
+
+    <!-- stylesheets -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/fixfont.css">
 
+    <!-- icons -->
     <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg" href="/assets/img/favicons/favicon.svg" />
     <link rel="shortcut icon" href="/assets/img/favicons/favicon.ico" />
 
+    <!-- discord embed -->
     <meta content="2faa.cc" property="og:title" />
     <meta content="I enjoy making stuff that do something. I easily create surprisingly bad code, somehow." property="og:description" />
-    <meta content="I enjoy making stuff that do something. I easily create surprisingly bad code, somehow." name="description" />
     <meta content="https://2faa.cc/" property="og:url" />
     <meta content="https://2faa.cc/assets/img/icon.png" property="og:image" />
     <meta content="#2579f0" data-react-helmet="true" name="theme-color" />
 
+    <!-- other? -->
+    <meta content="I enjoy making stuff that do something. I easily create surprisingly bad code, somehow." name="description" />
+
     <title>2faa.cc</title>
 
     <script>
-        let FF_FOUC_FIX;
+        // idek if this works or nah
+        let FF_FOUC_FIX; 
     </script>
 
-    <script src="/assets/js/ws.js"></script>
 </head>
 <body>
     <div class="titlecont">
@@ -41,7 +56,6 @@
           <img src="/assets/img/icon.png" width=125 height=125 alt="anarix0's profile picture, a cat wearing a motorcycle helmet" fetchpriority=high>
         </picture>
 
-
         <!-- <img src="/assets/img/icon.png"> -->
         <h2>anarix0</h2>
         <h3 class="statusText">please enable javascript</h3>
@@ -50,32 +64,32 @@
 
     <div class="linkcont">
         <div class="links">
-            <a href="https://tiktok.com/@anarix0_" target="_blank">
-                <button class="button">
+            <a href="https://tiktok.com/@anarix0_" target="_blank" aria-label="TikTok link">
+                <button class="button" aria-label="TikTok link">
                     <i class='bx bx-fw bxl-tiktok'></i>
                     <p>TikTok</p>
                 </button>
             </a>
-            <a href="https://youtube.com/@anarix0" target="_blank">
-                <button class="button">
+            <a href="https://youtube.com/@anarix0" target="_blank" aria-label="YouTube link">
+                <button class="button" aria-label="YouTube link">
                     <i class='bx bx-fw bxl-youtube'></i>
                     <p>YouTube</p>
                 </button>
             </a>
-            <a href="https://github.com/anarix0" target="_blank">
-                <button class="button">
+            <a href="https://github.com/anarix0" target="_blank" aria-label="GitHub link">
+                <button class="button" aria-label="GitHub link">
                     <i class='bx bx-fw bxl-github'></i>
                     <p>GitHub</p>
                 </button>
             </a>
-            <a href="https://discord.com/users/681177693831823363" target="_blank">
-                <button class="button">
+            <a href="https://discord.com/users/681177693831823363" target="_blank" aria-label="Discord account link">
+                <button class="button" aria-label="Discord account link">
                     <i class='bx bx-fw bxl-discord-alt'></i>
                     <p>Discord</p>
                 </button>
             </a>
-            <a>
-                <button class="button" onclick="hideAll()">
+            <a aria-label="Donation page">
+                <button class="button" onclick="hideAll()" aria-label="Donation page">
                     <i class='bx bx-fw bxs-wallet'></i>
                     <p>Donate</p>
                 </button>
@@ -84,3 +98,5 @@
     </div>
 </body>
 </html>
+
+<script src="/assets/js/ws.js"></script>

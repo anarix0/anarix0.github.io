@@ -1,23 +1,30 @@
 var heartbeat_interval = 10**10
 
-const ws = new WebSocket("wss://api.lanyard.rest/socket");
 const userId = "681177693831823363";
+
+let ws;
+
+function connectWS() {
+  ws = new WebSocket("wss://api.lanyard.rest/socket");
+}
+
+connectWS();
 
 let cachedLandyard;
 let firstRun;
 
 ws.addEventListener("open", (event) => {
-  console.log("ws opened!")
+  console.log(`%cws%c`,`background:#2478ef;color:black;padding:2px 6px;border-radius:6px;`, "", "opened!");
 });
 
 ws.addEventListener("close", (event) => {
-  console.log("ws closed!")
+  console.log(`%cws%c`,`background:#2478ef;color:black;padding:2px 6px;border-radius:6px;`, "", "closed!");
 });
 
 ws.addEventListener("message", (event) => {
   var event_json = JSON.parse(event.data)
 
-  console.log("ws", event_json);
+  console.log(`%cws%c`,`background:#2478ef;color:black;padding:2px 6px;border-radius:6px;`, "", event_json);
 
   if (event_json.op == 1) {
     ws.send(`{ \"op\": 2, \"d\": { \"subscribe_to_ids\": [\"${userId}\"] } }`)
@@ -34,6 +41,16 @@ ws.addEventListener("message", (event) => {
     }
   }
 
+});
+
+window.addEventListener('pageshow', (e) => {
+  if (e.persisted) {
+    connectWS();
+  }
+});
+
+window.addEventListener('beforeunload', () => {
+  if (ws) ws.close();
 });
 
 function heartbeat() {
@@ -72,7 +89,7 @@ function WSupdateStatus(landyard) {
         spotifyBtn.innerHTML = "<i class='bx bx-fw bxl-spotify'></i>"
         spotifyBtn.ariaLabel = "Spotify Button"
 
-        usualStatus = "<button class=\"spotifybtn\" onclick=\"currentlyPlaying()\"><i class=\"bx bx-fw bxl-spotify\"></i></button>" + status.replace("&mdash;", "—")
+        usualStatus = "<button class=\"spotifybtn\" onclick=\"currentlyPlaying()\" aria-label=\"Spotify Button\"><i class=\"bx bx-fw bxl-spotify\"></i></button>" + status.replaceAll("&mdash;", "—")
 
         // console.log(statusText.innerHTML)
         // console.log(usualStatus)
