@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- boxicons -->
-    <link rel="stylesheet" href="/assets/boxicons-2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="/assets/boxicons-2.1.4/css/boxicons.min.css" defer>
 
     <!-- font preloads -->
     <link rel="preload" href="/assets/font/DMSans-Italic.woff2" as="font">
@@ -14,7 +14,6 @@
     <!-- style preloads -->
     <link rel="preload" href="/assets/css/style.css" as="stylesheet">
     <link rel="preload" href="/assets/css/fixfont.css" as="stylesheet">
-
 
     <!-- preconnect stuff -->
     <link rel="preconnect" href="/assets/boxicons-2.1.4/fonts/boxicons.woff2">
@@ -40,6 +39,7 @@
     <!-- other? -->
     <meta content="I enjoy making stuff that do something. I easily create surprisingly bad code, somehow." name="description" />
 
+    <!-- title -->
     <title>2faa.cc</title>
 
     <script>
@@ -50,14 +50,15 @@
 </head>
 <body>
     <div class="titlecont">
-
         <picture>
-          <source srcset="/assets/img/icon.avif" type="image/avif" fetchpriority=high>
-          <img src="/assets/img/icon.png" width=125 height=125 alt="anarix0's profile picture, a cat wearing a motorcycle helmet" fetchpriority=high>
+          <source srcset="/assets/img/icon.avif 1x, /assets/img/icon@2x.avif 2x" type="image/avif" fetchpriority=high>>
+          <img src="/assets/img/icon.png" width="125" height="125" fetchpriority=high
+               srcset="/assets/img/icon.png 1x, /assets/img/icon@2x.png 2x"
+               alt="anarix0's profile picture, a cat wearing a motorcycle helmet">
         </picture>
 
-        <!-- <img src="/assets/img/icon.png"> -->
         <h2>anarix0</h2>
+
         <h3 class="statusText">please enable javascript</h3>
         <h3 class="statusTextspot"><br></h3>    
     </div>
