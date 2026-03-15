@@ -211,52 +211,6 @@ p {
     font-weight: 500;
 }
 
-@keyframes popup {
-    from {
-        opacity: 0;
-	    transform: scale(0);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.dot {
-    transform: scale(1);
-    opacity: 0;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    width: 35px;
-    height: 35px;
-    background-color: #f23f43;
-    border-radius: 50%;
-    animation: popup 1s 3.5s forwards;
-}
-
-
-
-@keyframes slide {
-    from {
-        opacity: 0;
-	    transform: translate3d(100%, 0, 0);
-    }
-    to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
-}
-
-.dot > .line {
-    opacity: 0;
-    animation: slide .5s 5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    border-radius: 50px;
-    background-color: #000000;
-    width: 25px;
-    height: 9.5px;
-}
-
 @media (max-width: 790px) {
     p {
         display: none;
@@ -315,53 +269,4 @@ p {
 
 .fadeout {
     animation: fadeoutl .5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-@keyframes cryptoanim {
-  0% {
-    opacity: 0;
-    /* filter: blur(48px); */
-    transform: translate3d(0, -42%, 0);
-  }
-  100% {
-    opacity: 1;
-    /* filter: blur(24px); */
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-.hoverer {
-  color: white;
-  z-index: 2;
-  transition: all 0.5s cubic-bezier(0.02, 0.01, 0.21, 1);
-  width: clamp(100px, 100px, 500px);
-  opacity: 0;
-  animation: cryptoanim 0.3s 0.2s cubic-bezier(.02,.01,.21,1) forwards;
-}
-
-.showthis {
-  margin-top: -1.8rem;
-  opacity: 0;
-  filter: blur(48px);
-  transform: translate3d(0, -42%, 0);
-
-  transition: all 0.35s cubic-bezier(.02,.01,.21,1);
-
-  animation: cryptoanim 0.35s 0.1s cubic-bezier(.02,.01,.21,1) forwards;
-  pointer-events: none;
-  font-size: clamp(.8em, 5vw, 1.17em); /* scale between min and max */
-    white-space: nowrap;       /* keep it one line */
-    overflow: hidden;          /* hide overflow */
-}
-
-.hoverer:hover ~ .showthis {
-  filter: blur(0px);
-  opacity: 1;
-  user-select: text;
-  filter: blur(0px);
-}
-
-.hoverer:hover {
-  opacity: 0;
-  animation: none;
 }
