@@ -5,20 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- boxicons -->
-    <link rel="stylesheet" href="/assets/boxicons-2.1.4/css/boxicons.min.css" defer>
+    <link rel="stylesheet" href="/assets/boxicons-2.1.4/css/boxicons.min.css">
 
     <!-- font preloads -->
-    <link rel="preload" href="/assets/font/DMSans-Italic.woff2" as="font">
-    <link rel="preload" href="/assets/font/DMSans-Regular.woff2" as="font">
+    <link rel="preload" href="/assets/font/DMSans-Italic.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/font/DMSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- style preloads -->
-    <link rel="preload" href="/assets/css/style.css" as="stylesheet">
-    <link rel="preload" href="/assets/css/fixfont.css" as="stylesheet">
-
-    <!-- preconnect stuff -->
-    <link rel="preconnect" href="/assets/boxicons-2.1.4/fonts/boxicons.woff2">
-    <link rel="preconnect" href="/assets/font/DMSans-Italic.woff2">
-    <link rel="preconnect" href="/assets/font/DMSans-Regular.woff2">
+    <link rel="preload" href="/assets/css/style.css" as="style">
+    <link rel="preload" href="/assets/css/fixfont.css" as="style">
 
     <!-- stylesheets -->
     <link rel="stylesheet" href="/assets/css/style.css">
@@ -37,52 +32,48 @@
 
     <!-- title -->
     <title>2faa.cc</title>
-
-    <script>
-        // idek if this works or nah
-        let FF_FOUC_FIX; 
-    </script>
-
 </head>
 <body>
-    <div class="titlecont">
+    <div id="main">
         <picture>
           <source srcset="/assets/img/icon.avif 1x, /assets/img/icon@2x.avif 2x" type="image/avif" fetchpriority=high>
-          <img id="profile-picture" src="/assets/img/icon.png" width="125" height="125" fetchpriority=high
-               srcset="/assets/img/icon.png 1x, /assets/img/icon@2x.png 2x"
-               alt="anarix0's profile picture, a cat wearing a motorcycle helmet">
+          <img id="profile-picture" src="/assets/img/icon.png"
+                width="125" height="125" fetchpriority=high
+                decoding=async loading=eager
+                srcset="/assets/img/icon.png 1x, /assets/img/icon@2x.png 2x"
+                alt="anarix0's profile picture">
         </picture>
 
         <h2 id="username">anarix0</h2>
 
-        <h3 id="status" class="statusText">please enable javascript</h3>
-        <h3 id="spotify" class="statusTextspot"><br></h3>    
+        <h3 id="status">please enable javascript</h3>
+        <h3 id="spotify"><br></h3>    
     </div>
 
-    <div class="linkcont">
-        <div id="links" class="links">
+    <div id="links-parent">
+        <div id="links">
             <a href="https://tiktok.com/@anarix0_" target="_blank" aria-label="TikTok link">
-                <button class="button" aria-label="TikTok link">
+                <button aria-label="TikTok link">
                     <i class='bx bx-fw bxl-tiktok'></i>
                     <p>TikTok</p>
                 </button>
             </a>
-            <a href="https://youtube.com/@anarix0" target="_blank" aria-label="YouTube link">
-                <button class="button" aria-label="YouTube link">
-                    <i class='bx bx-fw bxl-youtube'></i>
-                    <p>YouTube</p>
-                </button>
-            </a>
             <a href="https://github.com/anarix0" target="_blank" aria-label="GitHub link">
-                <button class="button" aria-label="GitHub link">
+                <button aria-label="GitHub link">
                     <i class='bx bx-fw bxl-github'></i>
                     <p>GitHub</p>
                 </button>
             </a>
             <a href="https://discord.gg/pqsVXr5JtA" target="_blank" aria-label="Discord link">
-                <button class="button" aria-label="Discord link">
+                <button aria-label="Discord link">
                     <i class='bx bx-fw bxl-discord-alt'></i>
                     <p>Discord</p>
+                </button>
+            </a>
+            <a href="https://youtube.com/@anarix0" target="_blank" aria-label="YouTube link">
+                <button aria-label="YouTube link">
+                    <i class='bx bx-fw bxl-youtube'></i>
+                    <p>YouTube</p>
                 </button>
             </a>
         </div>

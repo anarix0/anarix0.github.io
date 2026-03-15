@@ -127,14 +127,12 @@ function buildStatus(lanyard) {
     return status
 }
 
-function createSpotifyButton() {
+function createSpotifyButton() { // TODO: use a template??
     const spotifyBtn = document.createElement("button")
-    spotifyBtn.classList.add("spotifybtn")
     spotifyBtn.id = 'spotify-btn'
-    // spotifyBtn.setAttribute('onclick', 'showSong()')
     spotifyBtn.addEventListener('click', () => showSong())
     spotifyBtn.innerHTML = "<i class='bx bx-fw bxl-spotify'></i>"
-    spotifyBtn.ariaLabel = "Spotify Button"
+    spotifyBtn.ariaLabel = "Spotify button"
 
     return spotifyBtn
 }
@@ -152,8 +150,8 @@ function handleStatusAnimation() {
 }
 
 function updateSpotifyStatus(status, spotifyBtn) {
-    const statusEl = document.querySelector('#status')
-    const usualStatus = "<button id=\"spotify-btn\" class=\"spotifybtn\" aria-label=\"Spotify Button\"><i class=\"bx bx-fw bxl-spotify\"></i></button>" + status
+    const statusEl = document.querySelector('#status') // TODO: change the usualStatus thing to be not pure html - its ugly
+    const usualStatus = "<button id=\"spotify-btn\" aria-label=\"Spotify button\"><i class=\"bx bx-fw bxl-spotify\"></i></button>" + status
 
     let currentTimeout = 0
 
@@ -219,11 +217,11 @@ function showSong(lanyard) {
         const status = DOM.spotifyStatus
 
         status.classList.add("show")
-        status.classList.add("spotifyanim")
+        status.classList.add("animate")
         status.innerHTML = music
 
         setTimeout(function() {
-            status.classList.remove("spotifyanim")
+            status.classList.remove("animate")
             status.textContent = ""
         }, 5500)
     }
