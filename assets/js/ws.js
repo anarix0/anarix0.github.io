@@ -1,189 +1,230 @@
-var heartbeat_interval = 10**10
+// constants
 
-const userId = "681177693831823363";
-
-let ws;
-
-function connectWS() {
-  ws = new WebSocket("wss://api.lanyard.rest/socket");
+const WS_OP = {
+    EVENT: 0,
+    HELLO: 1,
+    INIT: 2,
+    HEARTBEAT: 3
 }
 
-connectWS();
+// DOM
+const DOM = {
+    picture: document.querySelector('#profile-picture'),
+    username: document.querySelector('#username'),
+    status: document.querySelector('#status'),
+    spotifyStatus: document.querySelector('#spotify'),
+    links: document.querySelector('#links'),
+};
 
-let cachedLandyard;
-let firstRun;
+// some variables
+const discordUserId = "681177693831823363"; // has to be a string cuz ts(80008)
+let heartbeatInterval = 30*1000 // 30s - default heartbeat for lanyard, i havent seen any other
 
-ws.addEventListener("open", (event) => {
-  console.log(`%cws%c`,`background:#2478ef;color:black;padding:2px 6px;border-radius:6px;`, "", "opened!");
-});
+// declerations
+let alreadyRan = false; // for hiding the please enable javascript message
+let cachedLanyard;
+let ws;
 
-ws.addEventListener("close", (event) => {
-  console.log(`%cws%c`,`background:#2478ef;color:black;padding:2px 6px;border-radius:6px;`, "", "closed!");
-});
+// websocket functions
+function connectWS() {
+  ws = new WebSocket("wss://api.lanyard.rest/socket");
 
-ws.addEventListener("message", (event) => {
-  var event_json = JSON.parse(event.data)
+  // websocket events
+  ws.addEventListener("open", () => {
+    logWS('opened!')
+  });
+  
+  ws.addEventListener("close", () => {
+    logWS('closed! attempting reconnection...')
+    ws = undefined;
+    setTimeout(() => { // reconnect after 2.5s
+        connectWS();
+    }, 2500);
+  });
+  
+  ws.addEventListener("message", handleEvent);
+}
 
-  console.log(`%cws%c`,`background:#2478ef;color:black;padding:2px 6px;border-radius:6px;`, "", event_json);
-
-  if (event_json.op == 1) {
-    ws.send(`{ \"op\": 2, \"d\": { \"subscribe_to_ids\": [\"${userId}\"] } }`)
-    heartbeat_interval = event_json.d.heartbeat_interval
-    heartbeat()
-  } else if (event_json.op == 0) {
-    if (event_json.t == "INIT_STATE") {
-        cachedLandyard = event_json.d[userId]
-        WSupdateStatus(cachedLandyard)
-        currentlyPlaying(cachedLandyard)
-    } else if (event_json.t == "PRESENCE_UPDATE") {
-        cachedLandyard = event_json.d
-        WSupdateStatus(event_json.d)
+function handleEvent(event) {
+    const eventJSON = JSON.parse(event.data)
+    logWS(eventJSON)
+  
+    switch (eventJSON.op) {
+      case WS_OP.EVENT:
+          switch (eventJSON.t) {
+              case "INIT_STATE": // initial state, shows spotify (if available) unlike presence update
+                  cachedLanyard = eventJSON.d[discordUserId]
+                  handlePresenceUpdate(cachedLanyard)
+                  showSong(cachedLanyard)
+                  break
+              case "PRESENCE_UPDATE":
+                  cachedLanyard = eventJSON.d
+                  handlePresenceUpdate(eventJSON.d)
+          }
+          break
+      case WS_OP.HELLO:
+          ws.send(JSON.stringify({
+              op: WS_OP.INIT,
+              d: {
+                  subscribe_to_ids: [discordUserId]
+              }
+          }))
+      
+          heartbeatInterval = eventJSON.d.heartbeat_interval
+          heartbeat()
     }
-  }
+}
 
-});
+function logWS(message) {
+  const style = 'background:#2478ef;color:black;padding:2px 6px;border-radius:6px;'
+  console.log(`%cws%c`, style, "", message);
+}
 
 window.addEventListener('pageshow', (e) => {
-  if (e.persisted) {
-    connectWS();
-  }
+  if (e.persisted) connectWS();
 });
 
 window.addEventListener('beforeunload', () => {
   if (ws) ws.close();
 });
 
+// ws init
+connectWS();
+
+// ws heartbeat
+
+let heartbeatTimer;
+
 function heartbeat() {
+    clearTimeout(heartbeatTimer);
+
+    heartbeatTimer = setTimeout(() => {
+        ws.send(JSON.stringify({ op: WS_OP.HEARTBEAT }));
+        heartbeat();
+    }, heartbeatInterval);
+}
+
+// ws update functions
+
+function buildStatus(lanyard) {
+    const currentStatus = lanyard.discord_status
+    const validStatuses = ['dnd', 'idle', 'offline', 'online']
+
+    let status = validStatuses.includes(currentStatus) ? currentStatus : "error."
+
+    for (const activity of lanyard.activities) {
+        switch (activity.id) {
+            case 'spotify:1':
+                break
+            case 'custom':
+                status += ` — <i>${activity.state}</i>`
+                break
+            default:
+                status += ` — ${activity.name}`
+        }
+    }
+
+    return status
+}
+
+function createSpotifyButton() {
+    const spotifyBtn = document.createElement("button")
+    spotifyBtn.classList.add("spotifybtn")
+    spotifyBtn.id = 'spotify-btn'
+    // spotifyBtn.setAttribute('onclick', 'showSong()')
+    spotifyBtn.addEventListener('click', () => showSong())
+    spotifyBtn.innerHTML = "<i class='bx bx-fw bxl-spotify'></i>"
+    spotifyBtn.ariaLabel = "Spotify Button"
+
+    return spotifyBtn
+}
+
+function handleStatusAnimation() {
+    const statusEl = document.querySelector('#status')
+
+    statusEl.classList.remove('show')
+    statusEl.classList.add('hide')
+
     setTimeout(() => {
-        ws.send("{\"op\":3}")
-        heartbeat()
-    }, heartbeat_interval);
+        statusEl.classList.add('show')
+        statusEl.classList.remove('hide')
+    }, 1000);
 }
 
-function WSupdateStatus(landyard) {
-    // console.log(landyard)
-    let status;
+function updateSpotifyStatus(status, spotifyBtn) {
+    const statusEl = document.querySelector('#status')
+    const usualStatus = "<button id=\"spotify-btn\" class=\"spotifybtn\" aria-label=\"Spotify Button\"><i class=\"bx bx-fw bxl-spotify\"></i></button>" + status
 
-    const current_status = landyard['discord_status']
-    const valid_statuses = ['dnd', 'idle', 'offline', 'online']
+    let currentTimeout = 0
 
-    status = valid_statuses.includes(current_status) ? current_status : "error."
-	
-	for (i in landyard.activities) {
-		if (landyard.activities[i].id != "spotify:1") {
-			if (landyard.activities[i].id != "custom") {
-                status += " &mdash; "+landyard.activities[i].name
-			} else {
-				status += " &mdash; <i>"+landyard.activities[i].state+"</i>"
-			}
-        }
-	}
+    if ((statusEl.innerHTML != usualStatus) && alreadyRan) { // if status changed and already ran 
+        handleStatusAnimation()
+        currentTimeout = 300
+    }
 
-    const statusText = document.getElementsByClassName("statusText")[0]
-    spotify = landyard['spotify']
+    setTimeout(() => {
+        DOM.status.textContent = ''
+        DOM.status.appendChild(spotifyBtn)
+        DOM.status.insertAdjacentHTML('beforeend', status)
+    }, currentTimeout);
+}
 
-    if (landyard['listening_to_spotify'] == true) {
-        const spotifyBtn = document.createElement("button")
-        spotifyBtn.classList.add("spotifybtn")
-        spotifyBtn.setAttribute('onclick', 'currentlyPlaying()')
-        spotifyBtn.innerHTML = "<i class='bx bx-fw bxl-spotify'></i>"
-        spotifyBtn.ariaLabel = "Spotify Button"
+function updateStatus(status) {
+    const statusEl = document.querySelector('#status')
+    const usualStatus = status
 
-        usualStatus = "<button class=\"spotifybtn\" onclick=\"currentlyPlaying()\" aria-label=\"Spotify Button\"><i class=\"bx bx-fw bxl-spotify\"></i></button>" + status.replaceAll("&mdash;", "—")
+    let currentTimeout = 0
 
-        // console.log(statusText.innerHTML)
-        // console.log(usualStatus)
+    if ((statusEl.innerHTML != usualStatus) && alreadyRan) { // if status changed and already ran 
+        handleStatusAnimation()
+        currentTimeout = 300
+    }
 
-        currentTimeout = 0
+    setTimeout(() => {
+        const spotifyBtn = document.querySelector("#spotify-btn");
+        if (spotifyBtn) spotifyBtn.remove()
+        DOM.status.innerHTML = status
+    }, currentTimeout);
+}
 
-        if ((statusText.innerHTML != usualStatus) && firstRun) {
-            console.log("DIFF STATUS")
-            statusText.classList.remove('show')
-            statusText.classList.add('hide')
-            setTimeout(() => {
-                statusText.classList.add('show')
-                statusText.classList.remove('hide')
-            }, 1000);
-            currentTimeout = 300
-        }
+function handlePresenceUpdate(lanyard) {
+    if (!lanyard) return
+    const status = buildStatus(lanyard);
 
-        setTimeout(() => {
-           statusText.innerHTML = ''
-            statusText.appendChild(spotifyBtn)
-            statusText.innerHTML = statusText.innerHTML + status 
-        }, currentTimeout);
+    if (lanyard.listening_to_spotify) {
+        const spotifyBtn = createSpotifyButton()
+        updateSpotifyStatus(status, spotifyBtn)
     } else {
-        var spotifybtn = document.body.getElementsByClassName("spotifybtn")[0]
-
-        usualStatus = status.replace("&mdash;", "—")
-
-        // console.log(statusText.innerHTML)
-        // console.log(usualStatus)
-
-        console.log(statusText.innerHTML == usualStatus)
-
-        currentTimeout = 0
-
-        if ((statusText.innerHTML != usualStatus) && firstRun) {
-            // console.log("DIFF STATUS")
-            statusText.classList.remove('show')
-            statusText.classList.add('hide')
-            setTimeout(() => {
-                statusText.classList.add('show')
-                statusText.classList.remove('hide')
-            }, 1000);
-            currentTimeout = 300
-        }
-
-        setTimeout(() => {
-            if (spotifybtn) { spotifybtn.remove() }
-            statusText.innerHTML = status
-        }, currentTimeout);
+        updateStatus(status)
     }
 
-    if (!firstRun) {
-        firstRun = true
-        statusText.classList.add("show")
+    if (!alreadyRan) {
+        alreadyRan = true
+        DOM.status.classList.add("show")
     }
 }
 
-function currentlyPlaying(landyard) {
-    if (!landyard) {
-        landyard = cachedLandyard
-    }
-    if (landyard.spotify) {
-        spotify = landyard['spotify']
+// show song
 
-        music = "</i><i>"+spotify['song']+" — "+spotify['artist'].replaceAll(";", ",")
+function showSong(lanyard) {
+    if (!lanyard) lanyard = cachedLanyard
 
-        const spotifyText = document.getElementsByClassName("statusTextspot")[0]
+    if (lanyard.spotify) {
+        const spotify = lanyard.spotify
 
-        spotifyText.classList.add("show")
-        spotifyText.classList.add("spotifyanim")
-        spotifyText.innerHTML = music
+        if (spotify === null) return
+
+        const music = "</i><i>"+spotify.song+" — "+spotify.artist.replaceAll(";", ",")
+
+        const status = DOM.spotifyStatus
+
+        status.classList.add("show")
+        status.classList.add("spotifyanim")
+        status.innerHTML = music
 
         setTimeout(function() {
-            spotifyText.classList.remove("spotifyanim")
-            spotifyText.innerHTML = ""
+            status.classList.remove("spotifyanim")
+            status.textContent = ""
         }, 5500)
     }
-}
-
-function hideAll() {
-    document.getElementsByTagName("img")[0].classList.add("fadeoutimg")
-    document.getElementsByTagName("h2")[0].classList.add("fadeoutimg")
-    document.getElementsByTagName("h3")[0].classList.add("fadeoutimg")
-    document.getElementsByTagName("h3")[0].classList.remove("show")
-    document.getElementsByClassName("links")[0].classList.add("fadeout")
-    document.getElementsByClassName("statusTextspot")[0].classList.remove("spotifyanim")
-    document.getElementsByClassName("statusTextspot")[0].innerHTML = ""
-    setTimeout(function() {
-        window.location.href = "/donate"
-    }, 500)
-    setTimeout(function() {
-        document.getElementsByTagName("img")[0].classList.remove("fadeoutimg")
-        document.getElementsByTagName("h2")[0].classList.remove("fadeoutimg")
-        document.getElementsByTagName("h3")[0].classList.remove("fadeoutimg")
-        document.getElementsByClassName("links")[0].classList.remove("fadeout")
-    }, 1500)
 }
